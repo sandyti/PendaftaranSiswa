@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'TesOnline',
     'jadwal_test' ,
     'user' ,
+    'django_extensions',
     'pendaftaransiswaberbasisweb_backend'
 ]
 
