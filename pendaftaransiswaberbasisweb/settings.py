@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,12 +35,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    "unfold",  # before django.contrib.admin
+    "django.contrib.admin",
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pendaftaransiswaberbasisweb',
     'siswa',
     'TesOnline',
     'jadwal_test' ,
@@ -131,3 +137,109 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+UNFOLD = {
+    "SITE_TITLE": "Custom suffix in <title> tag",
+    "SITE_HEADER": "PENDAFTARAN SISWA SMK BERBASIS WEB",
+    # "SITE_SYMBOL": "person",  # symbol from icon set
+    "SITE_URL" : "/",
+    "SITE_ICON": {
+        "light": lambda request: static("assets/logosmk.png"),  # light mode
+        "dark": lambda request: static("assets/logosmk.png"),  # dark mode
+    },
+    "SIDEBAR": {
+        "show_search": False,  # Search in applications and models names
+        "show_all_applications": False,  # Dropdown with all applications and models
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:index"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            {
+                "title": _("Jadwal Test"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Hasil Seleksi"),
+                        "icon": "verified",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:jadwal_test_hasilseleksi_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Jadwal Tes"),
+                        "icon": "schedule",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:jadwal_test_jadwaltes_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    }
+                ],
+            },
+            {
+                "title": _("Siswa"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Program Studi"),
+                        "icon": "auto_stories",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:siswa_programstudi_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Siswa"),
+                        "icon": "groups",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:siswa_siswa_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    }
+                ],
+            },
+            {
+                "title": _("Tes Online"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Jawaban Siswa"),
+                        "icon": "download",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:TesOnline_jawabansiswa_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Tes Online"),
+                        "icon": "quiz",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:TesOnline_tesonline_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    }
+                ],
+            },
+            {
+                "title": _("User"),
+                "separator": True,  # Top border
+                "collapsible": True,  # Collapsible group of links
+                "items": [
+                    {
+                        "title": _("Log Aktivitas"),
+                        "icon": "update",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:user_logaktivitas_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("User"),
+                        "icon": "account_circle",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:user_user_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    }
+                ],
+            },
+        ],
+    },
+}
